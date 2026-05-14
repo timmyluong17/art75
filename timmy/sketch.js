@@ -12,7 +12,7 @@ let questions = [
     video: "assets/video/yena.mp4" 
   },
   {
-    question: "According to fan interpretations, the five members represent?",
+    question: "What do the five members represent in the music video?",
     options: ["Different timelines", "Rival versions of themselves", "One single person’s emotions", "Dream characters"],
     answer: "One single person’s emotions",
     video: "assets/video/txt.mp4",
