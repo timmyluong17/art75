@@ -1,0 +1,35 @@
+/* Reset */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* 🔥 prevents scrollbars */
+  background: black; /* fallback if video fails */
+  font-family: Arial, sans-serif;
+}
+
+/* Canvas fills screen cleanly */
+canvas {
+  display: block;
+  position: fixed;   /* 🔥 keeps it locked */
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+/* Buttons (p5 DOM buttons) */
+button {
+  z-index: 2; /* 🔥 always above canvas */
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* 🔥 Hover effect (nice polish) */
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(0,255,255,0.7);
+}
+
+/* 🔥 Click effect */
+button:active {
+  transform: scale(0.95);
+}
