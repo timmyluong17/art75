@@ -13,8 +13,8 @@ let questions = [
   },
   {
     question: "What do the five members represent in the music video?",
-    options: ["Different timelines", "Rival versions of themselves", "One single person’s emotions", "Dream characters"],
-    answer: "One single person’s emotions",
+    options: ["Different timelines", "Rival versions of themselves", "One single person's emotions", "Dream characters"],
+    answer: "One single person's emotions",
     video: "assets/video/txt.mp4",
     startTime: 18
   },
@@ -67,7 +67,8 @@ let startBtn, restartBtn, volSlider;
 let startScreen = true, gameOver = false, victory = false, showCorrectScreen = false;
 let showIncorrectScreen = false;
 let shakeFrames = 0, videoFade = 0;
-let gameOverMusic, correctSound, incorrectSound;
+// CHANGE 1: added victoryMusic variable
+let gameOverMusic, correctSound, incorrectSound, victoryMusic;
 let vDrawW = 0, vDrawH = 0, vCenterY = 0;
 let restartBtnVisible = false;
 let optionBtnsVisible = false;
@@ -110,6 +111,11 @@ function preload() {
     function(s) { incorrectSound = s; },
     function(e) { console.warn('incorrect.mp3 not found'); }
   );
+  // CHANGE 2: load victory music — put your file at assets/video/victory.mp3
+  loadSound('assets/video/victory.mp3',
+    function(s) { victoryMusic = s; },
+    function(e) { console.warn('victory.mp3 not found'); }
+  );
 }
 
 function setup() {
@@ -125,7 +131,6 @@ function setup() {
   vid.loop = true;
   document.body.appendChild(vid);
 
-  // --- GIF FIX: z-index above canvas, centered via transform ---
   gameOverGif = document.createElement("img");
   gameOverGif.src = "assets/video/gameover.gif";
   gameOverGif.style.position = "fixed";
@@ -133,8 +138,8 @@ function setup() {
   gameOverGif.style.width = "200px";
   gameOverGif.style.height = "200px";
   gameOverGif.style.imageRendering = "pixelated";
-  gameOverGif.style.zIndex = "1000";           // sit above the p5 canvas
-  gameOverGif.style.transform = "translateX(-50%)"; // horizontal center via left:50%
+  gameOverGif.style.zIndex = "1000";
+  gameOverGif.style.transform = "translateX(-50%)";
   document.body.appendChild(gameOverGif);
 
   volSlider = createSlider(0, 1, 0.1, 0.01);
@@ -348,6 +353,8 @@ function restartGame() {
   if (gameOverMusic && gameOverMusic.isPlaying()) gameOverMusic.stop();
   if (correctSound && correctSound.isPlaying()) correctSound.stop();
   if (incorrectSound && incorrectSound.isPlaying()) incorrectSound.stop();
+  // CHANGE 3a: stop victory music on restart
+  if (victoryMusic && victoryMusic.isPlaying()) victoryMusic.stop();
 
   gameOverGif.style.display = "none";
 
@@ -731,11 +738,10 @@ function drawGameOver() {
     volSlider.hide();
     restartBtnVisible = true;
 
-    // Position GIF centered horizontally, between GAME OVER text and RESTART button
     gameOverGif.style.display = "block";
-    gameOverGif.style.left = "50%";                          // center anchor
-    gameOverGif.style.top = (height * 0.52) + "px";         // below the text, above restart
-    gameOverGif.style.transform = "translateX(-50%)";        // true horizontal center
+    gameOverGif.style.left = "50%";
+    gameOverGif.style.top = (height * 0.52) + "px";
+    gameOverGif.style.transform = "translateX(-50%)";
   }
 
   colorMode(RGB, 255);
@@ -754,6 +760,11 @@ function drawVictory() {
     victoryParticles = [];
     victoryAnimFrame = 0;
     spawnVictoryParticles();
+    // CHANGE 3b: play victory music the moment the victory screen appears
+    if (victoryMusic && !victoryMusic.isPlaying()) {
+      victoryMusic.setVolume(0.3);
+      victoryMusic.play();
+    }
   }
 
   victoryAnimFrame++;
